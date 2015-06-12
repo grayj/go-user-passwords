@@ -20,16 +20,10 @@ const saltLength = 18
 const keyLength = 32
 
 // Prepend this to tokens to support future upgrades of the hashing function.
-var versionHeader = fmt.Sprintf("scrypt(N=%d,r=%d,p=%d,len=%d)$", n, r, p, keyLength)
-
-// Length of combined token as stored in the database.
-var tokenLength = saltLength + keyLength + len(versionHeader)
+var versionHeader = fmt.Sprintf("scrypt$NrpL%d/%d/%d/%d$", n, r, p, keyLength)
 
 // ErrTokenWrongVersion is generated if a token's versionHeader doesn't match
 var ErrTokenWrongVersion = errors.New("Token header did not match current version.")
-
-// ErrTokenWrongLength is generated if a token's length doesn't match
-var ErrTokenWrongLength = errors.New("Token did not match expected length.")
 
 // ErrPasswordLength is generated if a password is greater than 1024 bytes
 var ErrPasswordLength = errors.New("Password longer than 1 KB, refused as denial of service safeguard.")
@@ -53,17 +47,17 @@ func tokenize(salt []byte, key []byte) string {
 
 // Verify that a token is plausible and extract the salt stored in a token
 func saltFromToken(token string) ([]byte, error) {
-	if len(token) != tokenLength {
-		return nil, ErrTokenWrongLength
-	}
-	if !compare(token[:tokenLength], versionHeader) {
+	fmt.Println(token)
+	fmt.Println(token[:len(versionHeader)])
+	fmt.Println(versionHeader)
+	if !compare(token[:len(versionHeader)], versionHeader) {
 		return nil, ErrTokenWrongVersion
 	}
-	salt, err := base64.StdEncoding.DecodeString(token[len(versionHeader):][:saltLength])
+	decoded, err := base64.StdEncoding.DecodeString(token[len(versionHeader):])
 	if err != nil {
 		return nil, err
 	}
-	return salt, nil
+	return decoded[:saltLength], nil
 }
 
 // Generate cryptographically-sound random salt via crypto/rand
