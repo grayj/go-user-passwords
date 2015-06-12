@@ -1,9 +1,9 @@
 # go-user-passwords
 Simple password authentication, suitable for website logins against a database
 
-This package wraps scrypt, such that you have simple `Hash(password)` and `Verify(password, token)` functions.
+This package provides simple `Hash(password)` and `Verify(password, token)` functions for user logins.
 
-It considers out-of-scope anything beyond that, as those aspects are likely to depend on your service architecture. You will still need to implement things like password resets, sessions, login attempt logging, and so forth.
+It considers out-of-scope anything beyond that, as those aspects will depend on your service architecture and requirements. You will still need to implement things like password resets, sessions, login attempt logging, and so forth.
 
 ### Installation
 
