@@ -23,6 +23,8 @@ When a user tries to log in, look up the token which matches the provided userna
 
 That's it.
 
-Both methods can also return errors. You may want to return a user-facing error for `ErrPasswordLength` on the off chance that someone tries to feed you a >1KB password. These are blocked as a denial-of-service safeguard.
+Both methods can return errors. You should likely return a user-facing error for `ErrPasswordLength` on the off chance that someone tries to feed you a >1KB password. These are blocked as a denial-of-service safeguard. Any other `err != nil` state should be safe to respond to with an HTTP 5XX.
+
+If you're seeing `ErrTokenInvalid` at all, you're doing something funny with your tokens. This won't happen if a user merely provides an invalid passsword, it requries the token to be egregriously wrong (empty, mangled, fake, inconsistent version header).
 
 P.S. Make sure that you use HTTPS for login requests (and any other sensitive interactions). If you're making users send passwords to you in the clear, you already have a giant hole in your security. Yes, this actually needs repeating.
