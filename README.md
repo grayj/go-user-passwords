@@ -17,8 +17,6 @@ Plus or minus "you should use godep" and possibly vendoring.
 
     import "github.com/grayj/go-user-passwords"
 
-There are only two methods you need to be aware of, `Hash(password)` and `Verify(password, token)`.
-
 * When a user creates a new password record, run `Hash()` and store the resulting token in your database.
 * When a user tries to log in, look up the token which matches the provided username or email. Then do `Verify()` with the provided password and that token.
 
