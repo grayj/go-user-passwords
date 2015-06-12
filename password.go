@@ -47,9 +47,6 @@ func tokenize(salt []byte, key []byte) string {
 
 // Verify that a token is plausible and extract the salt stored in a token
 func saltFromToken(token string) ([]byte, error) {
-	fmt.Println(token)
-	fmt.Println(token[:len(versionHeader)])
-	fmt.Println(versionHeader)
 	if !compare(token[:len(versionHeader)], versionHeader) {
 		return nil, ErrTokenWrongVersion
 	}
