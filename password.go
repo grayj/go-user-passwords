@@ -2,6 +2,7 @@ package password
 
 import (
 	"crypto/rand"
+	"crypto/subtle"
 	"encoding/base64"
 	"errors"
 	"fmt"
@@ -30,14 +31,7 @@ var ErrPasswordLength = errors.New("Password longer than 1 KB, refused as denial
 
 // Compare strings via bitwise XOR, i.e. constant-time comparison
 func compare(a string, b string) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	var x byte
-	for i := 0; i < len(b); i++ {
-		x |= a[i] ^ b[i]
-	}
-	return x == 0
+	return subtle.ConstantTimeCompare([]byte(a), []byte(b)) == 1
 }
 
 // Tokenize the salt and salted hash key
