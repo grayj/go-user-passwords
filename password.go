@@ -14,8 +14,8 @@ const n = 16384
 const r = 8
 const p = 1
 
-// Length of the salt. Should be at least 16, using 18 to avoid base64 padding.
-const saltLength = 18
+// Length of the salt. Reasonable secure value is 128-bit / 16-byte.
+const saltLength = 16
 
 // Length of the scrypt derived key.
 const keyLength = 32
