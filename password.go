@@ -30,12 +30,12 @@ var ErrTokenWrongVersion = errors.New("Token header did not match current versio
 var ErrPasswordLength = errors.New("Password longer than 1 KB, refused as denial of service safeguard.")
 
 // Compare strings via bitwise XOR, i.e. constant-time comparison
-func compare(a string, b string) bool {
+func compare(a, b string) bool {
 	return subtle.ConstantTimeCompare([]byte(a), []byte(b)) == 1
 }
 
 // Tokenize the salt and salted hash key
-func tokenize(salt []byte, key []byte) string {
+func tokenize(salt, key []byte) string {
 	return versionHeader + base64.StdEncoding.EncodeToString(append(salt, key...))
 }
 
@@ -87,7 +87,7 @@ func Hash(password string) (string, error) {
 }
 
 // Verify that password is consistent with token
-func Verify(password string, token string) (bool, error) {
+func Verify(password, token string) (bool, error) {
 	if len(password) > 1024 {
 		return false, ErrPasswordLength
 	}
