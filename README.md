@@ -11,8 +11,6 @@ You can do the usual:
 
     go get github.com/grayj/go-user-passwords
 
-Plus or minus "you should use godep" and possibly vendoring.
-
 ### Usage
 
     import "github.com/grayj/go-user-passwords"
