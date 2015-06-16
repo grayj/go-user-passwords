@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var validToken = "scrypt$NrpL16384/8/1/32$yNMBmTCyZ8Be+ZRQ3zTGZbNfm7wG4LQJy4Uyc4mwi3hqK9MtKujIyfooZdusrvdqCxI="
+var validToken = "scrypt$NrpL16384/8/1/32$77v23qUfTy03VLiVqYqYUrZjinTvdvM8JKcqEe8MqpcG0yfzdHk8iMQvoRzM-Naq"
 
 func TestValidLogin(t *testing.T) {
 	password := "password"
@@ -35,7 +35,7 @@ func TestTokenWrongVersion(t *testing.T) {
 	password := "password"
 	token := "badtoken"
 	authed, err := Verify(password, token)
-	if err != ErrTokenInvalid {
+	if err != ErrTokenWrongVersion {
 		t.Error("Failed to generate the expected error")
 	}
 	if authed {
@@ -43,31 +43,9 @@ func TestTokenWrongVersion(t *testing.T) {
 	}
 }
 
-func TestCompareTrue(t *testing.T) {
-	a := "abracadabra"
-	if !compare(a, a) {
-		t.Error("Got false when comparing matching strings")
-	}
-}
-
-func TestCompareFalse(t *testing.T) {
-	a := "abracadabra"
-	b := "cappuccinos"
-	if compare(a, b) {
-		t.Error("Got true when comparing non-matching strings")
-	}
-}
-
-func TestCompareUnequalLength(t *testing.T) {
-	a := "abracadabra"
-	b := "coffee"
-	if compare(a, b) {
-		t.Error("Got true when comparing non-matching strings")
-	}
-}
-
 func TestTokenize(t *testing.T) {
-	decoded, _ := base64.StdEncoding.DecodeString("yNMBmTCyZ8Be+ZRQ3zTGZbNfm7wG4LQJy4Uyc4mwi3hqK9MtKujIyfooZdusrvdqCxI=")
+	saltedKey := validToken[len(versionHeader):]
+	decoded, _ := base64.URLEncoding.DecodeString(saltedKey)
 	salt, key := decoded[:18], decoded[18:]
 	token := tokenize(salt, key)
 	if !compare(token, validToken) {
