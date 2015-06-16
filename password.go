@@ -5,6 +5,7 @@ import (
 	"crypto/subtle"
 	"encoding/base64"
 	"errors"
+	"log"
 	"fmt"
 	"golang.org/x/crypto/scrypt"
 )
@@ -62,12 +63,12 @@ func createSalt() ([]byte, error) {
 }
 
 // Calculate scrypt salted hash key from password and salt
-func createKey(password string, salt []byte) ([]byte, error) {
+func createKey(password string, salt []byte) []byte {
 	key, err := scrypt.Key([]byte(password), salt, n, r, p, keyLength)
 	if err != nil {
-		return []byte{}, err
+		log.Fatal(err.Error())
 	}
-	return key, nil
+	return key
 }
 
 // Hash returns a destructive cryptographic hash of the provided password
@@ -79,10 +80,7 @@ func Hash(password string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	key, err := createKey(password, salt)
-	if err != nil {
-		return "", err
-	}
+	key := createKey(password, salt)
 	return tokenize(salt, key), nil
 }
 
@@ -95,9 +93,6 @@ func Verify(password, token string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	key, err := createKey(password, salt)
-	if err != nil {
-		return false, err
-	}
+	key := createKey(password, salt)
 	return compare(tokenize(salt, key), token), nil
 }
