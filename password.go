@@ -5,9 +5,9 @@ import (
 	"crypto/subtle"
 	"encoding/base64"
 	"errors"
-	"log"
 	"fmt"
 	"golang.org/x/crypto/scrypt"
+	"log"
 )
 
 // Parameters for scrypt key derivation, appropriate for interactive login.
@@ -37,15 +37,15 @@ func compare(a, b string) bool {
 
 // Tokenize the salt and salted hash key
 func tokenize(salt, key []byte) string {
-	return versionHeader + base64.StdEncoding.EncodeToString(append(salt, key...))
+	return versionHeader + base64.URLEncoding.EncodeToString(append(salt, key...))
 }
 
 // Verify that a token is plausible and extract the salt stored in a token
 func saltFromToken(token string) ([]byte, error) {
-	if !compare(token[:len(versionHeader)], versionHeader) {
+	if len(token) <= len(versionHeader) || !compare(token[:len(versionHeader)], versionHeader) {
 		return nil, ErrTokenWrongVersion
 	}
-	decoded, err := base64.StdEncoding.DecodeString(token[len(versionHeader):])
+	decoded, err := base64.URLEncoding.DecodeString(token[len(versionHeader):])
 	if err != nil {
 		return nil, err
 	}
