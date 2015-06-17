@@ -1,6 +1,8 @@
 # go-user-passwords
 Simple password authentication, suitable for website logins against a database
 
+[![Godoc](http://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/grayj/go-user-passwords)
+
 This package provides simple Hash(password) and Verify(password, token) functions for user logins.
 
 It considers out-of-scope anything beyond that, as those aspects will depend on your service architecture and requirements. You will still need to implement things like password resets, sessions, login attempt logging, and so forth.
